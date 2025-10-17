@@ -2,36 +2,18 @@ import sys
 import pygame as pg
 import numpy as np
 from car import Car
+from roadManager import RoadManager
+
+from util import build_catmull_rom_chain
 
 
-def catmull_rom(p0, p1, p2, p3, n_points=20):
-    t = np.linspace(0, 1, n_points)[:, None]
-    p0, p1, p2, p3 = map(np.array, (p0, p1, p2, p3))
-    a = 2*p1
-    b = -p0 + p2
-    c = 2*p0 - 5*p1 + 4*p2 - p3
-    d = -p0 + 3*p1 - 3*p2 + p3
-    return 0.5 * (a + (b*t) + (c*t**2) + (d*t**3))
 
-
-def build_catmull_rom_chain(points, samples_per_segment=100):
-    curve = []
-    for i in range(len(points) - 3):
-        seg = catmull_rom(points[i], points[i+1], points[i+2], points[i+3], samples_per_segment)
-        curve.extend(seg)
-    return np.array(curve)
-
-control_points = np.array([
-    [100, 0],
-    [100, 300],
-    [500, 300]
-])
-
-padded = np.vstack([control_points[0], control_points, control_points[-1]])
-spline_points = build_catmull_rom_chain(padded, 50)
-
+my_road_manager = RoadManager(0.0, 0.0)
 my_car = Car(20.0)
 
+
+
+print(my_car.__repr__())
 def main():
     pg.init()
     size = (800, 600)
@@ -68,12 +50,9 @@ def main():
         # Draw
         screen.fill((255, 255, 255))
 
-        # draw road before car
-        for p in spline_points:
-            pg.draw.circle(screen, (255, 100, 100), p.astype(int), 50)
-        
-        my_car.draw(pg, screen)
 
+        my_road_manager.draw(pg,screen)
+        my_car.draw(pg, screen)
 
         
 

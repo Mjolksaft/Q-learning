@@ -54,9 +54,5 @@ class Car:
         self.x += dx
         self.y += dy
 
-    def __repr__(self) -> str:
-        return (f"Car(x={self.x:.2f}, y={self.y:.2f}, heading={math.degrees(self.heading):.1f}°,"
-                f" speed={self.speed:.2f} m/s)")
-
     def draw(self, pg, screen) -> None:
         pg.draw.circle(screen, 'BLUE', (int(self.x), int(self.y)), self.size)
