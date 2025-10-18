@@ -4,20 +4,23 @@ import pygame as pg
 from camera import Camera
 from car import Car
 from roadManager import RoadManager
-from road import Road
-from util import build_catmull_rom_chain
 
 my_road_manager = RoadManager(0.0, 0.0)
 my_car = Car(20.0)
 my_camera = Camera(800, 600)
 
-print(my_car.__repr__())
 def main():
     pg.init()
     size = (800, 600)
     screen = pg.display.set_mode(size)
     running = True
     clock = pg.time.Clock()
+    # small font for HUD (FPS)
+    try:
+        font = pg.font.Font(None, 24)
+    except Exception:
+        pg.font.init()
+        font = pg.font.Font(None, 24)
 
     while running:
         dt = clock.tick(60) / 1000.0  # seconds since last frame
@@ -53,6 +56,11 @@ def main():
         screen.fill((255, 255, 255))
         my_road_manager.draw(pg,screen, my_camera)
         my_car.draw(pg, screen, my_camera)
+
+        # FPS counter (top-left)
+        fps = clock.get_fps()
+        fps_surf = font.render(f"{fps:4.1f} FPS", True, (0, 0, 0))
+        screen.blit(fps_surf, (10, 10))
 
         pg.display.flip()
     pg.quit()

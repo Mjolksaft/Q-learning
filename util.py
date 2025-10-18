@@ -19,6 +19,7 @@ def build_catmull_rom_chain(points, samples_per_segment=100):
 
 def get_heading(v1, v2):
     vector = np.array(v1) - np.array(v2)
-    dir = vector / np.linalg.norm(vector)
-
-    return dir
+    norm = np.linalg.norm(vector)
+    if norm == 0:
+        return np.array([0.0, 0.0])  # or a default direction like [1,0]
+    return vector / norm

@@ -35,6 +35,7 @@ class RoadManager:
         self.x_start, self.y_start = self.x_end, self.y_end
 
         self.roads.append(new_road)
+        print(len(self.roads))
 
     def check_goal(self, car_position: tuple[float, float]) -> None:
         car = np.array(car_position[:2])
@@ -64,7 +65,6 @@ class RoadManager:
             if abs(distance) < abs(min_distance):
                 min_distance = distance 
 
-        print(min_distance) 
         return min_distance 
 
     def draw(self, pg, screen , camera) -> None:
