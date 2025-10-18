@@ -54,5 +54,6 @@ class Car:
         self.x += dx
         self.y += dy
 
-    def draw(self, pg, screen) -> None:
-        pg.draw.circle(screen, 'BLUE', (int(self.x), int(self.y)), self.size)
+    def draw(self, pg, screen, camera) -> None:
+        # pg.draw.circle(screen, 'BLUE', (int(self.x), int(self.y)), self.size)
+        pg.draw.circle(screen, 'BLUE', (400,300), self.size)

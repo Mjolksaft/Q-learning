@@ -17,3 +17,8 @@ def build_catmull_rom_chain(points, samples_per_segment=100):
         curve.extend(seg)
     return np.array(curve)
 
+def get_heading(v1, v2):
+    vector = np.array(v1) - np.array(v2)
+    dir = vector / np.linalg.norm(vector)
+
+    return dir

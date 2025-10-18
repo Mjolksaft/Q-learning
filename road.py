@@ -22,6 +22,12 @@ class Road:
     def get_last_point(self) -> np.ndarray:
         return self.spline_points[-1][0], self.spline_points[-1][1]
 
-    def draw(self, pg, screen) -> None:
+    def draw(self, pg, screen, camera) -> None:
         for p in self.spline_points:
-            pg.draw.circle(screen, 'RED', p.astype(int), 50)
+            world_pos = tuple(np.array(p) - np.array(camera.get_pos()))
+            pg.draw.circle(screen, 'RED', world_pos, 50)
+        
+        for p in self.spline_points:
+            world_pos = tuple(np.array(p) - np.array(camera.get_pos()))
+            pg.draw.circle(screen, 'BLACK', world_pos, 1)
+
