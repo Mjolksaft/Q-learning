@@ -45,7 +45,7 @@ class RoadManager:
             print(f"🎉 Goal reached (distance={distance:.2f}) — spawning new road...")
             self.spawn_new_road()
 
-    def check_car_on_road(self, car_position: Car) -> float :
+    def check_car_on_road(self, car_position: tuple[float, float]) -> float :
         """ returns a signed distnce based on which side of the road """
         min_distance = math.inf
         for j in range(1, len(self.roads[-1].spline_points)):
@@ -64,7 +64,7 @@ class RoadManager:
             if abs(distance) < abs(min_distance):
                 min_distance = distance 
 
-        # print(min_distance) 
+        print(min_distance) 
         return min_distance 
 
     def draw(self, pg, screen , camera) -> None:

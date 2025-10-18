@@ -1,7 +1,5 @@
 import sys
 import pygame as pg
-import numpy as np
-import math
 
 from camera import Camera
 from car import Car
@@ -43,18 +41,16 @@ def main():
         elif keys[pg.K_RIGHT]:
             steer = my_car.max_steer_rate
 
-        # Update car
+        # Update 
         my_car.update(dt, accel, steer)
-        my_road_manager.update()
 
-        my_camera.set_position(my_car.x, my_car.y)
-
+        #misc
+        my_camera.set_position((my_car.x, my_car.y))
         my_road_manager.check_goal((my_car.x, my_car.y))
-
         my_road_manager.check_car_on_road((my_car.x, my_car.y))
+
         # Draw
         screen.fill((255, 255, 255))
-
         my_road_manager.draw(pg,screen, my_camera)
         my_car.draw(pg, screen, my_camera)
 
