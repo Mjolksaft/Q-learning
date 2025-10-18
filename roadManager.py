@@ -11,11 +11,11 @@ class RoadManager:
     Manages and spawns roads dynamically.
     """
 
-    ROAD_TEMPLATES = np.array([ # control points, rotation of last road 
-        [[0.0, 0.0], [0.0, 100.0], [200.0, 150.0]],
-        [[0.0, 0.0], [0.0, 100.0], [200.0, 250.0]],
-        [[0.0, 0.0], [0.0, 150.0], [200.0, 100.0]],
-    ])
+    ROAD_TEMPLATES = [ # control points, rotation of last road 
+        [[[0.0, 0.0], [0.0, 300.0]], 0.8],
+        [[[0.0, 0.0], [0.0, 300.0]], 0.],
+        [[[0.0, 0.0], [0.0, 300.0]], 0.4],
+    ]
 
     def __init__(self, x_start: float = 0.0, y_start: float = 0.0) -> None:
         self.x_start = x_start
@@ -28,14 +28,13 @@ class RoadManager:
 
     def spawn_new_road(self) -> None:
         control_points = random.choice(self.ROAD_TEMPLATES)
+        self.x_start, self.y_start = self.x_end, self.y_end
 
         new_road = Road(control_points, self.x_start, self.y_start)
 
         self.x_end, self.y_end = new_road.get_last_point
-        self.x_start, self.y_start = self.x_end, self.y_end
 
         self.roads.append(new_road)
-        print(len(self.roads))
 
     def check_goal(self, car_position: tuple[float, float]) -> None:
         car = np.array(car_position[:2])
@@ -65,6 +64,7 @@ class RoadManager:
             if abs(distance) < abs(min_distance):
                 min_distance = distance 
 
+        print(min_distance)
         return min_distance 
 
     def draw(self, pg, screen , camera) -> None:
