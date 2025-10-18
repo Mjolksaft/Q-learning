@@ -1,9 +1,11 @@
 import sys
 import pygame as pg
 import numpy as np
+import math
+
 from car import Car
 from roadManager import RoadManager
-
+from road import Road
 from util import build_catmull_rom_chain
 
 
@@ -45,7 +47,10 @@ def main():
 
         # Update car
         my_car.update(dt, accel, steer)
-        # print(my_car.speed)
+        my_road_manager.update()
+        my_road_manager.check_goal((my_car.x, my_car.y))
+
+        check_car_on_road(my_road_manager.roads[0], (my_car.x, my_car.y))
 
         # Draw
         screen.fill((255, 255, 255))
@@ -61,6 +66,14 @@ def main():
     pg.quit()
     sys.exit()
 
+def check_car_on_road(road: Road, car_position: Car):
+    min_distance = math.inf
+
+    for j in road.spline_points:
+        distance = np.linalg.norm(np.array((j[0], j[1])) - np.array((car_position[0], car_position[1])))
+        min_distance = min(distance, min_distance)
+
+    return min_distance
 
 
 if __name__ == "__main__":

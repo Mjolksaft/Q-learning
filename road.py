@@ -9,7 +9,11 @@ class Road:
 
         # generate road 
         padded = np.vstack([control_points[0], control_points, control_points[-1]])
+        padded += np.array([self.x, self.y])
         self.spline_points = build_catmull_rom_chain(padded, 50)
+
+        print(self.spline_points[0])
+
 
     def update(self) -> None:
         print("hello world")

@@ -16,3 +16,4 @@ def build_catmull_rom_chain(points, samples_per_segment=100):
         seg = catmull_rom(points[i], points[i+1], points[i+2], points[i+3], samples_per_segment)
         curve.extend(seg)
     return np.array(curve)
+
