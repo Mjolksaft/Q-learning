@@ -11,11 +11,9 @@ class RoadManager:
     Manages and spawns roads dynamically.
     """
 
-    ROAD_TEMPLATES = np.array([ # control points, rotation of last road 
-        [[0.0, 0.0], [0.0, 100.0], [200.0, 150.0]],
-        [[0.0, 0.0], [0.0, 100.0], [200.0, 250.0]],
-        [[0.0, 0.0], [0.0, 150.0], [200.0, 100.0]],
-    ])
+    ROAD_TEMPLATES = [ # control points, rotation of last road 
+        [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2]
+    ]
 
     def __init__(self, x_start: float = 0.0, y_start: float = 0.0) -> None:
         self.x_start = x_start
@@ -28,14 +26,13 @@ class RoadManager:
 
     def spawn_new_road(self) -> None:
         control_points = random.choice(self.ROAD_TEMPLATES)
+        self.x_start, self.y_start = self.x_end, self.y_end
 
         new_road = Road(control_points, self.x_start, self.y_start)
 
         self.x_end, self.y_end = new_road.get_last_point
-        self.x_start, self.y_start = self.x_end, self.y_end
 
         self.roads.append(new_road)
-        print(len(self.roads))
 
     def check_goal(self, car_position: tuple[float, float]) -> None:
         car = np.array(car_position[:2])
@@ -62,7 +59,7 @@ class RoadManager:
             distance = np.linalg.norm(np.array((current[0], current[1])) - np.array(car_position[:2]))
             distance *= np.sign(signed_distance)
 
-            if abs(distance) < abs(min_distance):
+            if abs(distance) < abs(min_distance): ## change so that it checks if its on the road by checking distance < road size 
                 min_distance = distance 
 
         return min_distance 

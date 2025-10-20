@@ -1,6 +1,8 @@
 import sys
 import pygame as pg
+import numpy as np
 
+from ai import Ai
 from camera import Camera
 from car import Car
 from roadManager import RoadManager
@@ -8,6 +10,7 @@ from roadManager import RoadManager
 my_road_manager = RoadManager(0.0, 0.0)
 my_car = Car(20.0)
 my_camera = Camera(800, 600)
+my_ai = Ai(50.0) # same as road radius if more then 1 then not on road 
 
 def main():
     pg.init()
@@ -15,7 +18,6 @@ def main():
     screen = pg.display.set_mode(size)
     running = True
     clock = pg.time.Clock()
-    # small font for HUD (FPS)
     try:
         font = pg.font.Font(None, 24)
     except Exception:
@@ -50,7 +52,11 @@ def main():
         #misc
         my_camera.set_position((my_car.x, my_car.y))
         my_road_manager.check_goal((my_car.x, my_car.y))
-        my_road_manager.check_car_on_road((my_car.x, my_car.y))
+        signed_distance = my_road_manager.check_car_on_road((my_car.x, my_car.y))
+
+        my_ai.set_signed_distance(signed_distance)
+
+        print(my_ai)
 
         # Draw
         screen.fill((255, 255, 255))

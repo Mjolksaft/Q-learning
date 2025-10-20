@@ -19,7 +19,20 @@ def build_catmull_rom_chain(points, samples_per_segment=100):
 
 def get_heading(v1, v2):
     vector = np.array(v1) - np.array(v2)
-    norm = np.linalg.norm(vector)
-    if norm == 0:
-        return np.array([0.0, 0.0])  # or a default direction like [1,0]
-    return vector / norm
+    dir = vector / np.linalg.norm(vector)
+
+    return dir
+
+def rotate_point(point, angle):
+    x, y = point
+    cos_theta = np.cos(angle)
+    sin_theta = np.sin(angle)
+    x_rot = x * cos_theta - y * sin_theta
+    y_rot = x * sin_theta + y * cos_theta
+    return (x_rot, y_rot)
+
+def rotate_spline(spline, angle):
+    new_spline = []
+    for i in range(len(spline)):
+        new_spline.append(rotate_point(spline[i], angle))
+    return np.array(new_spline)
