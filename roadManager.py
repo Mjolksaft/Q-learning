@@ -12,9 +12,7 @@ class RoadManager:
     """
 
     ROAD_TEMPLATES = [ # control points, rotation of last road 
-        [[[0.0, 0.0], [0.0, 300.0]], 0.8],
-        [[[0.0, 0.0], [0.0, 300.0]], 0.],
-        [[[0.0, 0.0], [0.0, 300.0]], 0.4],
+        [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2]
     ]
 
     def __init__(self, x_start: float = 0.0, y_start: float = 0.0) -> None:
@@ -61,10 +59,9 @@ class RoadManager:
             distance = np.linalg.norm(np.array((current[0], current[1])) - np.array(car_position[:2]))
             distance *= np.sign(signed_distance)
 
-            if abs(distance) < abs(min_distance):
+            if abs(distance) < abs(min_distance): ## change so that it checks if its on the road by checking distance < road size 
                 min_distance = distance 
 
-        print(min_distance)
         return min_distance 
 
     def draw(self, pg, screen , camera) -> None:

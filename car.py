@@ -18,7 +18,7 @@ class Car:
     heading: float = 0.0
     speed: float = 100.0
 
-    max_speed: float = 100.0
+    max_speed: float = 200.0
     max_reverse_speed: float = -10.0 
     max_accel: float = 20.0
     max_steer_rate: float = math.radians(90.0)
