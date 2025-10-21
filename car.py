@@ -18,11 +18,11 @@ class Car:
     heading: float = 0.0
     speed: float = 100.0
 
-    max_speed: float = 200.0
+    max_speed: float = 100.0
     max_reverse_speed: float = -10.0 
     max_accel: float = 20.0
     max_steer_rate: float = math.radians(90.0)
-    friction: float = 0.5
+    friction: float = 0.0
 
     def update(self, dt: float, accel: float = 0.0, steer_rate: float = 0.0) -> None:
         if dt <= 0:
@@ -53,6 +53,10 @@ class Car:
         dy = math.sin(self.heading) * self.speed * dt
         self.x += dx
         self.y += dy
+
+    def reset_to_start(self) -> None:
+        self.x = 0
+        self.y = 0
 
     def draw(self, pg, screen, camera) -> None:
         # pg.draw.circle(screen, 'BLUE', (int(self.x), int(self.y)), self.size)

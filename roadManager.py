@@ -12,7 +12,8 @@ class RoadManager:
     """
 
     ROAD_TEMPLATES = [ # control points, rotation of last road 
-        [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2]
+        [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2,], 
+        # [[[0.0, 0.0], [400.0, 600.0],], -np.pi/2,]
     ]
 
     def __init__(self, x_start: float = 0.0, y_start: float = 0.0) -> None:
@@ -46,6 +47,7 @@ class RoadManager:
     def check_car_on_road(self, car_position: tuple[float, float]) -> float :
         """ returns a signed distnce based on which side of the road """
         min_distance = math.inf
+        current_road_dir = 0.0
         for j in range(1, len(self.roads[-1].spline_points)):
             current = self.roads[-1].spline_points[j]
             last = self.roads[-1].spline_points[j-1]
@@ -61,9 +63,14 @@ class RoadManager:
 
             if abs(distance) < abs(min_distance): ## change so that it checks if its on the road by checking distance < road size 
                 min_distance = distance 
+                current_road_dir = road_dir
 
-        return min_distance 
+        return min_distance, current_road_dir
 
+
+    def get_road_direction(): 
+
+        pass
     def draw(self, pg, screen , camera) -> None:
         for road in self.roads:
             road.draw(pg, screen, camera)

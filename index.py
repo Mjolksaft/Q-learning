@@ -2,15 +2,18 @@ import sys
 import pygame as pg
 import numpy as np
 
-from ai import Ai
+from ai import AiController
 from camera import Camera
 from car import Car
+from playerController import PlayerController
 from roadManager import RoadManager
 
+# Initialize core objects
 my_road_manager = RoadManager(0.0, 0.0)
 my_car = Car(20.0)
 my_camera = Camera(800, 600)
-my_ai = Ai(50.0) # same as road radius if more then 1 then not on road 
+my_ai = AiController(200.0, my_car, my_road_manager) 
+my_player_controller = PlayerController(my_car)
 
 def main():
     pg.init()
@@ -18,60 +21,38 @@ def main():
     screen = pg.display.set_mode(size)
     running = True
     clock = pg.time.Clock()
-    try:
-        font = pg.font.Font(None, 24)
-    except Exception:
-        pg.font.init()
-        font = pg.font.Font(None, 24)
+    font = pg.font.Font(None, 24)
 
     while running:
         dt = clock.tick(60) / 1000.0  # seconds since last frame
-        
+
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
                 running = False
 
-        keys = pg.key.get_pressed()
+        signed_distance, road_dir = my_road_manager.check_car_on_road((my_car.x, my_car.y))
 
-        accel = 0.0
-        steer = 0.0
-
-        if keys[pg.K_UP]:
-            accel = my_car.max_accel
-        elif keys[pg.K_DOWN]:
-            accel = -my_car.max_accel
-
-        if keys[pg.K_LEFT]:
-            steer = -my_car.max_steer_rate
-        elif keys[pg.K_RIGHT]:
-            steer = my_car.max_steer_rate
-
-        # Update 
-        my_car.update(dt, accel, steer)
-
-        #misc
+        my_ai.update_car(dt)
+        # my_player_controller.update(pg, dt)
         my_camera.set_position((my_car.x, my_car.y))
-        my_road_manager.check_goal((my_car.x, my_car.y))
-        signed_distance = my_road_manager.check_car_on_road((my_car.x, my_car.y))
 
-        my_ai.set_signed_distance(signed_distance)
-
-        print(my_ai)
-
-        # Draw
         screen.fill((255, 255, 255))
-        my_road_manager.draw(pg,screen, my_camera)
+        my_road_manager.draw(pg, screen, my_camera)
         my_car.draw(pg, screen, my_camera)
 
-        # FPS counter (top-left)
+
+        car_dir = np.array([np.cos(my_car.heading), np.sin(my_car.heading)])
+        next_heading_alignment = np.dot(car_dir, road_dir)
+        # HUD info
         fps = clock.get_fps()
-        fps_surf = font.render(f"{fps:4.1f} FPS", True, (0, 0, 0))
+        info_text = f"FPS: {fps:4.1f}  Dist: {signed_distance:6.1f} car_align: {next_heading_alignment:6.2f} Reward: {my_ai.action:6.1f}"
+        fps_surf = font.render(info_text, True, (0, 0, 0))
         screen.blit(fps_surf, (10, 10))
 
         pg.display.flip()
+
     pg.quit()
     sys.exit()
-
 
 
 if __name__ == "__main__":
