@@ -13,6 +13,7 @@ class RoadManager:
 
     ROAD_TEMPLATES = [ # control points, rotation of last road 
         [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2,], 
+        # [[[0.0, 0.0], [0.0, 600.0], [0.0, 1200.0], [0.0, 1600.0], [0.0, 2200.0],], -np.pi/2,], 
         # [[[0.0, 0.0], [400.0, 600.0],], -np.pi/2,]
     ]
 
@@ -35,14 +36,16 @@ class RoadManager:
 
         self.roads.append(new_road)
 
-    def check_goal(self, car_position: tuple[float, float]) -> None:
+    def check_goal(self, car_position: tuple[float, float]) -> bool:
         car = np.array(car_position[:2])
         end = np.array([self.x_end, self.y_end])
         distance = np.linalg.norm(car - end)
 
-        if distance < 25:
+        if distance < 50:
             print(f"🎉 Goal reached (distance={distance:.2f}) — spawning new road...")
-            self.spawn_new_road()
+            # self.spawn_new_road()
+            return True
+        return False
 
     def check_car_on_road(self, car_position: tuple[float, float]) -> float :
         """ returns a signed distnce based on which side of the road """

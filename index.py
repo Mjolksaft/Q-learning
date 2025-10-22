@@ -19,6 +19,7 @@ def main():
 
     # my_ai.train(num_episodes=500, dt=0.1) ## for the ai 
     # my_ai.save_q_table()
+    # my_ai.save_q_table_excel()
     my_ai.load_q_table() ## still goes off road to much punish heading ? add reward for finishing road 
  
     my_car.reset_to_start()
@@ -30,7 +31,6 @@ def main():
     running = True
     clock = pg.time.Clock()
     font = pg.font.Font(None, 24)
-
 
     while running:
         dt = clock.tick(60) / 1000.0  # seconds since last frame
@@ -44,7 +44,7 @@ def main():
         my_ai.update_car(dt)
         # my_player_controller.update(pg, dt)
         my_camera.set_position((my_car.x, my_car.y))
-        my_road_manager.check_goal((my_car.x, my_car.y))
+        finished = my_road_manager.check_goal((my_car.x, my_car.y))
 
         screen.fill((255, 255, 255))
         my_road_manager.draw(pg, screen, my_camera)

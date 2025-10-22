@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import random
 import pickle
 from car import Car
@@ -8,8 +9,7 @@ from roadManager import RoadManager
 class AiController:
     ACTIONS = [-1, 0, 1]  # -1 = left, 1 = right
     distance_bins = np.linspace(-1, 1, 21)
-    heading_bins = np.linspace(-1, 1, 21)
-    bins = [distance_bins, heading_bins]
+    bins = [distance_bins]  # Only distance now
 
     def __init__(self, max_distance: float, car: Car, road_manager: RoadManager):
         self.max_distance = max_distance
@@ -25,23 +25,21 @@ class AiController:
 
         self.Q = {}
         self.signed_distance = 0.0
-        self.heading_alignment = 0.0
-        self.state = np.array([self.signed_distance, self.heading_alignment])
+        self.state = np.array([self.signed_distance])
         self.action = 0
         self.reward_val = 0
 
-    def set_state(self, signed_distance, heading_alignment):
-        """Set normalized values (-1 to 1)."""
+    def set_state(self, signed_distance):
+        """Set normalized distance (-1 to 1)."""
         self.signed_distance = np.clip(signed_distance / self.max_distance, -1, 1)
-        self.heading_alignment = np.clip(heading_alignment, -1, 1)
-        self.state = np.array([self.signed_distance, self.heading_alignment])
+        self.state = np.array([self.signed_distance])
 
     @staticmethod
     def discretize(state, bins) -> tuple:
         return tuple(np.digitize(s, b) for s, b in zip(state, bins))
 
     def select_action(self) -> int:
-        """action selection."""
+        """Epsilon-greedy action selection."""
         discrete_state = self.discretize(self.state, self.bins)
         if random.random() < self.epsilon:
             action = random.choice(self.ACTIONS)
@@ -51,15 +49,15 @@ class AiController:
         self.action = action
         return action
 
-    def reward(self, distance, heading_alignment, off_road) -> float:
-        """Reward based on how centered"""
-        reward = 1.0
-        reward -= abs(distance) * 0.2
-        reward += heading_alignment * 0.5
-        if heading_alignment < 0:
-            reward -= 1.0
+    def reward(self, distance, off_road, finished) -> float:
+        """Reward shaping based on distance and heading."""
+        reward = 1.0 - abs(distance) * 0.3 * 0.5
+
         if off_road:
-            reward = -100.0
+            reward -= 10.0
+        if finished:
+            reward += 100.0
+
         return reward
 
     def update_q(self, reward, next_state):
@@ -73,10 +71,8 @@ class AiController:
 
     def update_car(self, dt):
         signed_distance, road_dir = self.road_manager.check_car_on_road((self.car.x, self.car.y))
-        car_dir = np.array([np.cos(self.car.heading), np.sin(self.car.heading)])
-        heading_alignment = np.dot(car_dir, road_dir)
 
-        self.set_state(signed_distance, heading_alignment)
+        self.set_state(signed_distance)
         action = self.select_action()
 
         accel = self.car.max_accel  # always move forward
@@ -84,19 +80,15 @@ class AiController:
         self.car.update(dt, accel, steer)
 
         next_signed_distance, road_dir = self.road_manager.check_car_on_road((self.car.x, self.car.y))
-        car_dir = np.array([np.cos(self.car.heading), np.sin(self.car.heading)])
-        next_heading_alignment = np.dot(car_dir, road_dir)
-        next_state = np.array([
-            np.clip(next_signed_distance / self.max_distance, -1, 1),
-            np.clip(next_heading_alignment, -1, 1)
-        ])
+        next_state = np.array([np.clip(next_signed_distance / self.max_distance, -1, 1)])
 
         off_road = abs(next_signed_distance) > self.max_distance
-        reward = self.reward(next_signed_distance, next_heading_alignment, off_road)
+        finished = self.road_manager.check_goal((self.car.x, self.car.y))
+        reward = self.reward(next_signed_distance, off_road, finished)
         self.reward_val = reward
 
         self.update_q(reward, next_state)
-        return off_road 
+        return off_road, finished
 
     def train(self, num_episodes: int, dt: float):
         print("Starting training...")
@@ -107,19 +99,27 @@ class AiController:
             steps = 0
 
             while not done:
-                off_road = self.update_car(dt)
+                off_road, finished = self.update_car(dt)
                 total_reward += self.reward_val
                 steps += 1
 
-                if off_road or steps > 1000:
+                if off_road or finished or steps > 1000:
                     done = True
+                
 
             self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
+            
+            car = np.array([self.car.x, self.car.x])
+            end = np.array([self.road_manager.x_end, self.road_manager.y_end])
+            distance = np.linalg.norm(car - end)
 
             print(
                 f"Episode {episode+1}/{num_episodes} | "
                 f"Total reward: {total_reward:.2f} | "
-                f"Epsilon: {self.epsilon:.3f}"
+                f"Epsilon: {self.epsilon:.3f} | "
+                f"finished: {finished} | "
+                f"Distance: {distance:.3f}"
+
             )
 
         print("Training complete!")
@@ -133,3 +133,12 @@ class AiController:
         with open(path, "rb") as f:
             self.Q = pickle.load(f)
         print(f"Q-table loaded from {path}")
+
+    def save_q_table_excel(self, path="q_table.xlsx"):
+        data = []
+        for (state, action), value in self.Q.items():
+            distance_bin = state[0]
+            data.append([distance_bin, action, value])
+        df = pd.DataFrame(data, columns=["distance_bin", "action", "q_value"])
+        df.to_excel(path, index=False)
+        print(f"Q-table saved to {path} (Excel)")
