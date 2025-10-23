@@ -11,8 +11,17 @@ class RoadManager:
     Manages and spawns roads dynamically.
     """
 
-    ROAD_TEMPLATES = [ # control points, rotation of last road
-        [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2,],
+    ROAD_TEMPLATES = [  # control points, rotation of last road
+        [
+            [
+                [0.0, 0.0],
+                [0.0, 600.0],
+                [200.0, 1200.0],
+                [-200.0, 1600.0],
+                [0.0, 2200.0],
+            ],
+            -np.pi / 2,
+        ],
         # [[[0.0, 0.0], [0.0, 600.0], [0.0, 1200.0], [0.0, 1600.0], [0.0, 2200.0],], -np.pi/2,],
         # [[[0.0, 0.0], [400.0, 600.0],], -np.pi/2,]
     ]
@@ -47,13 +56,13 @@ class RoadManager:
             return True
         return False
 
-    def check_car_on_road(self, car_position: tuple[float, float]) -> float :
-        """ returns a signed distnce based on which side of the road """
+    def check_car_on_road(self, car_position: tuple[float, float]) -> float:
+        """returns a signed distnce based on which side of the road"""
         min_distance = math.inf
         current_road_dir = 0.0
         for j in range(1, len(self.roads[-1].spline_points)):
             current = self.roads[-1].spline_points[j]
-            last = self.roads[-1].spline_points[j-1]
+            last = self.roads[-1].spline_points[j - 1]
 
             road_dir = get_heading(current, last)
             vec_to_car = np.array(car_position[:2]) - np.array(current)
@@ -61,20 +70,23 @@ class RoadManager:
             road_perp = np.array([-road_dir[1], road_dir[0]])
             signed_distance = np.dot(vec_to_car, road_perp)
 
-            distance = np.linalg.norm(np.array((current[0], current[1])) - np.array(car_position[:2]))
+            distance = np.linalg.norm(
+                np.array((current[0], current[1])) - np.array(car_position[:2])
+            )
             distance *= np.sign(signed_distance)
 
-            if abs(distance) < abs(min_distance): ## change so that it checks if its on the road by checking distance < road size
+            if (
+                abs(distance) < abs(min_distance)
+            ):  ## change so that it checks if its on the road by checking distance < road size
                 min_distance = distance
                 current_road_dir = road_dir
 
         return min_distance, current_road_dir
 
-
     def get_road_direction():
-
         pass
-    def draw(self, pg, screen , camera) -> None:
+
+    def draw(self, pg, screen, camera) -> None:
         for road in self.roads:
             road.draw(pg, screen, camera)
 

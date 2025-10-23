@@ -26,40 +26,13 @@ source .venv/bin/activate
 uv sync
 ```
 
-## Linting and formatting with ruff
-- Check for issues:
-```bash
-ruff check --fix
+3. Run project
+``` 
+uv run q-learning
 ```
-
+## Linting and formatting with ruff
 - Auto-format and fix simple issues:
 ```bash
 ruff format .
-ruff check .
+ruff check -fix
 ```
-
-- Recommended: keep ruff in `requirements-dev.txt` or install with your environment for CI.
-
-## Testing
-```bash
-pip install pytest            # if not in requirements
-pytest
-```
-
-## Recommended project files
-- requirements.txt
-- requirements-dev.txt (include ruff)
-- .gitignore
-- .ruff.toml (optional ruff config)
-- README.md
-
-## Contributing
-- Create a branch per feature
-- Run ruff and tests before opening a PR
-
-## Troubleshooting
-- If installs fail, confirm Python version and that the virtual environment is activated.
-- Run `ruff format .` before `ruff check .` to fix formatting issues automatically.
-- For CI, install deps then run `ruff check .` and `pytest`.
-
-License: add a LICENSE file of your choice.

@@ -1,6 +1,7 @@
 import math
 from dataclasses import dataclass
 
+
 @dataclass
 class Car:
     """
@@ -33,7 +34,11 @@ class Car:
         steer_rate = max(-self.max_steer_rate, min(self.max_steer_rate, steer_rate))
 
         # apply friction as opposing acceleration (simple model)
-        friction_acc = -self.friction * (1 if self.speed > 0 else -1) if abs(self.speed) > 1e-6 else 0.0
+        friction_acc = (
+            -self.friction * (1 if self.speed > 0 else -1)
+            if abs(self.speed) > 1e-6
+            else 0.0
+        )
 
         # net acceleration
         net_accel = accel + friction_acc
@@ -60,4 +65,4 @@ class Car:
 
     def draw(self, pg, screen, camera) -> None:
         # pg.draw.circle(screen, 'BLUE', (int(self.x), int(self.y)), self.size)
-        pg.draw.circle(screen, 'BLUE', (400,300), self.size)
+        pg.draw.circle(screen, "BLUE", (400, 300), self.size)

@@ -5,6 +5,7 @@ import pickle
 from .car import Car
 from .roadManager import RoadManager
 
+
 class AiController:
     ACTIONS = [-1, 0, 1]  # -1 = left, 1 = right
     distance_bins = np.linspace(-1, 1, 21)
@@ -69,7 +70,9 @@ class AiController:
         self.state = next_state
 
     def update_car(self, dt):
-        signed_distance, road_dir = self.road_manager.check_car_on_road((self.car.x, self.car.y))
+        signed_distance, road_dir = self.road_manager.check_car_on_road(
+            (self.car.x, self.car.y)
+        )
 
         self.set_state(signed_distance)
         action = self.select_action()
@@ -78,8 +81,12 @@ class AiController:
         steer = action * self.car.max_steer_rate
         self.car.update(dt, accel, steer)
 
-        next_signed_distance, road_dir = self.road_manager.check_car_on_road((self.car.x, self.car.y))
-        next_state = np.array([np.clip(next_signed_distance / self.max_distance, -1, 1)])
+        next_signed_distance, road_dir = self.road_manager.check_car_on_road(
+            (self.car.x, self.car.y)
+        )
+        next_state = np.array(
+            [np.clip(next_signed_distance / self.max_distance, -1, 1)]
+        )
 
         off_road = abs(next_signed_distance) > self.max_distance
         finished = self.road_manager.check_goal((self.car.x, self.car.y))
@@ -105,7 +112,6 @@ class AiController:
                 if off_road or finished or steps > 1000:
                     done = True
 
-
             self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
 
             car = np.array([self.car.x, self.car.x])
@@ -113,12 +119,11 @@ class AiController:
             distance = np.linalg.norm(car - end)
 
             print(
-                f"Episode {episode+1}/{num_episodes} | "
+                f"Episode {episode + 1}/{num_episodes} | "
                 f"Total reward: {total_reward:.2f} | "
                 f"Epsilon: {self.epsilon:.3f} | "
                 f"finished: {finished} | "
                 f"Distance: {distance:.3f}"
-
             )
 
         print("Training complete!")

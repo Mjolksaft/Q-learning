@@ -1,8 +1,9 @@
 from .car import Car
 
+
 class PlayerController:
     """Handles player keyboard input and controls the car."""
-    
+
     def __init__(self, car: Car) -> None:
         self.car = car
 
