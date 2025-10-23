@@ -2,9 +2,8 @@ import numpy as np
 import pandas as pd
 import random
 import pickle
-from car import Car
-from roadManager import RoadManager
-
+from .car import Car
+from .roadManager import RoadManager
 
 class AiController:
     ACTIONS = [-1, 0, 1]  # -1 = left, 1 = right
@@ -19,7 +18,7 @@ class AiController:
         # learning parameters
         self.alpha = 0.1
         self.gamma = 0.95
-        self.epsilon = 0.2 
+        self.epsilon = 0.2
         self.min_epsilon = 0.01
         self.epsilon_decay = 0.995
 
@@ -105,10 +104,10 @@ class AiController:
 
                 if off_road or finished or steps > 1000:
                     done = True
-                
+
 
             self.epsilon = max(self.min_epsilon, self.epsilon * self.epsilon_decay)
-            
+
             car = np.array([self.car.x, self.car.x])
             end = np.array([self.road_manager.x_end, self.road_manager.y_end])
             distance = np.linalg.norm(car - end)
@@ -124,17 +123,17 @@ class AiController:
 
         print("Training complete!")
 
-    def save_q_table(self, path="q_table.pkl"):
+    def save_q_table(self, path="src\\q_learning\\q-table\\q_table.pkl"):
         with open(path, "wb") as f:
             pickle.dump(self.Q, f)
         print(f"Q-table saved to {path}")
 
-    def load_q_table(self, path="q_table.pkl"):
+    def load_q_table(self, path="src\\q_learning\\q-table\\q_table.pkl"):
         with open(path, "rb") as f:
             self.Q = pickle.load(f)
         print(f"Q-table loaded from {path}")
 
-    def save_q_table_excel(self, path="q_table.xlsx"):
+    def save_q_table_excel(self, path="src\\q_learning\\q-table\\q_table.xlsx"):
         data = []
         for (state, action), value in self.Q.items():
             distance_bin = state[0]

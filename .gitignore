@@ -1,5 +1,7 @@
 __pycache__/
 *.pyc
-
+.venv
 *.pkl
 *.xlsx
+*.lock
+.ruff_cache/

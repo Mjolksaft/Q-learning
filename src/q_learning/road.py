@@ -1,5 +1,6 @@
 import numpy as np
-from util import build_catmull_rom_chain, rotate_spline
+
+from .util import build_catmull_rom_chain, rotate_spline
 
 class Road:
     def __init__(self, template, x: float = 0.0, y: float = 0.0, angle: float = 0.0):
@@ -7,7 +8,7 @@ class Road:
         self.y = y
         self.angle = template[1]
 
-        # generate road 
+        # generate road
         padded = np.vstack([template[0][0], template[0], template[0][-1]])
         spline_points = build_catmull_rom_chain(padded, 50)
         self.spline_points = rotate_spline(spline_points, self.angle) ## ROTATE THEN TRANSLATE !!!!!

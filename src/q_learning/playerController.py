@@ -1,4 +1,4 @@
-from car import Car
+from .car import Car
 
 class PlayerController:
     """Handles player keyboard input and controls the car."""

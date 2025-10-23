@@ -11,7 +11,7 @@ class Car:
     Controls:
     - update(dt, accel, steer): accel in m/s^2, steer in rad/s (rate)
     """
-    
+
     size: float
     x: float = 0.0
     y: float = 0.0
@@ -19,7 +19,7 @@ class Car:
     speed: float = 100.0
 
     max_speed: float = 100.0
-    max_reverse_speed: float = -10.0 
+    max_reverse_speed: float = -10.0
     max_accel: float = 20.0
     max_steer_rate: float = math.radians(90.0)
     friction: float = 0.0

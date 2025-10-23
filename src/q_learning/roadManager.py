@@ -2,18 +2,18 @@ import math
 import numpy as np
 import random
 
-from car import Car
-from road import Road
-from util import get_heading
+from .road import Road
+from .util import get_heading
+
 
 class RoadManager:
     """
     Manages and spawns roads dynamically.
     """
 
-    ROAD_TEMPLATES = [ # control points, rotation of last road 
-        [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2,], 
-        # [[[0.0, 0.0], [0.0, 600.0], [0.0, 1200.0], [0.0, 1600.0], [0.0, 2200.0],], -np.pi/2,], 
+    ROAD_TEMPLATES = [ # control points, rotation of last road
+        [[[0.0, 0.0], [0.0, 600.0], [200.0, 1200.0], [-200.0, 1600.0], [0.0, 2200.0],], -np.pi/2,],
+        # [[[0.0, 0.0], [0.0, 600.0], [0.0, 1200.0], [0.0, 1600.0], [0.0, 2200.0],], -np.pi/2,],
         # [[[0.0, 0.0], [400.0, 600.0],], -np.pi/2,]
     ]
 
@@ -64,14 +64,14 @@ class RoadManager:
             distance = np.linalg.norm(np.array((current[0], current[1])) - np.array(car_position[:2]))
             distance *= np.sign(signed_distance)
 
-            if abs(distance) < abs(min_distance): ## change so that it checks if its on the road by checking distance < road size 
-                min_distance = distance 
+            if abs(distance) < abs(min_distance): ## change so that it checks if its on the road by checking distance < road size
+                min_distance = distance
                 current_road_dir = road_dir
 
         return min_distance, current_road_dir
 
 
-    def get_road_direction(): 
+    def get_road_direction():
 
         pass
     def draw(self, pg, screen , camera) -> None:
