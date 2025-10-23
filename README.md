@@ -1,6 +1,6 @@
 # Q Learning model
 
-Minimal README to start the `uv` Python project and show how to download dependencies and run linters using ruff.
+ README to start the `Q Learning model` project and show how to download dependencies and run linters using ruff.
 
 ## Prerequisites
 - Git
