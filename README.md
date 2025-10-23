@@ -1,4 +1,4 @@
-# uv
+# Q Learning model
 
 Minimal README to start the `uv` Python project and show how to download dependencies and run linters using ruff.
 
