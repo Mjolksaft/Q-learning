@@ -19,11 +19,34 @@ class RoadManager:
                 [200.0, 1200.0],
                 [-200.0, 1600.0],
                 [0.0, 2200.0],
+                [0.0, 2500.0],
             ],
             -np.pi / 2,
         ],
-        # [[[0.0, 0.0], [0.0, 600.0], [0.0, 1200.0], [0.0, 1600.0], [0.0, 2200.0],], -np.pi/2,],
-        # [[[0.0, 0.0], [400.0, 600.0],], -np.pi/2,]
+        [
+            [
+                [0.0, 0.0], 
+                [0.0, 600.0], 
+                [200.0, 600.0], 
+                [200.0, 0.0], 
+                [400.0, 0.0], 
+                [400.0, 600.0], 
+
+            ], 
+                -np.pi/2,
+        ],
+        [
+            [
+                [0.0, 0.0], 
+                [-100.0, 600.0], 
+                [100.0, 1200.0], 
+                [-100.0, 1800.0], 
+                [100.0, 2400.0], 
+                [0.0, 3000.0], 
+                [0.0, 3600.0], 
+            ], 
+                -np.pi/2,
+        ],
     ]
 
     def __init__(self, x_start: float = 0.0, y_start: float = 0.0) -> None:
@@ -37,6 +60,7 @@ class RoadManager:
 
     def spawn_new_road(self) -> None:
         control_points = random.choice(self.ROAD_TEMPLATES)
+        # control_points = self.ROAD_TEMPLATES[1]
         self.x_start, self.y_start = self.x_end, self.y_end
 
         new_road = Road(control_points, self.x_start, self.y_start)
@@ -51,7 +75,7 @@ class RoadManager:
         distance = np.linalg.norm(car - end)
 
         if distance < 50:
-            print(f"🎉 Goal reached (distance={distance:.2f}) — spawning new road...")
+            # print(f"🎉 Goal reached (distance={distance:.2f}) — spawning new road...")
             if spawn_new_road:
                 self.spawn_new_road()
             return True
