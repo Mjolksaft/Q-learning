@@ -11,14 +11,7 @@
 ```bash
 python -m venv .venv
 
-# macOS / Linux
 source .venv/bin/activate
-
-# Windows (PowerShell)
-.\.venv\Scripts\Activate
-
-# Windows (CMD)
-.\.venv\Scripts\activate.bat
 ```
 
 2. Install dependencies
