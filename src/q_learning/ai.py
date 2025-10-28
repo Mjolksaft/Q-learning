@@ -89,7 +89,7 @@ class AiController:
         )
 
         off_road = abs(next_signed_distance) > self.max_distance
-        finished = self.road_manager.check_goal((self.car.x, self.car.y))
+        finished = self.road_manager.check_goal((self.car.x, self.car.y), False)
         reward = self.reward(next_signed_distance, off_road, finished)
         self.reward_val = reward
 

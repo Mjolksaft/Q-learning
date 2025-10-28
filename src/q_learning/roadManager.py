@@ -45,14 +45,15 @@ class RoadManager:
 
         self.roads.append(new_road)
 
-    def check_goal(self, car_position: tuple[float, float]) -> bool:
+    def check_goal(self, car_position: tuple[float, float], spawn_new_road: bool) -> bool:
         car = np.array(car_position[:2])
         end = np.array([self.x_end, self.y_end])
         distance = np.linalg.norm(car - end)
 
         if distance < 50:
             print(f"🎉 Goal reached (distance={distance:.2f}) — spawning new road...")
-            # self.spawn_new_road()
+            if spawn_new_road:
+                self.spawn_new_road()
             return True
         return False
 

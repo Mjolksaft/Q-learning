@@ -20,8 +20,9 @@ def main():
     # my_ai.train(num_episodes=500, dt=0.1) ## for the ai
     # my_ai.save_q_table()
     # my_ai.save_q_table_excel()
-    my_ai.load_q_table()  ## still goes off road to much punish heading ? add reward for finishing road
-
+    
+    my_ai.load_q_table('src\\q_learning\\q-table\\q_table_best.pkl')  ## still goes off road to much punish heading ? add reward for finishing road
+    my_ai.epsilon = 0
     my_car.reset_to_start()
 
     pg.init()
@@ -47,7 +48,7 @@ def main():
         my_ai.update_car(dt)
         # my_player_controller.update(pg, dt)
         my_camera.set_position((my_car.x, my_car.y))
-        my_road_manager.check_goal((my_car.x, my_car.y))
+        my_road_manager.check_goal((my_car.x, my_car.y), True)
 
         screen.fill((255, 255, 255))
         my_road_manager.draw(pg, screen, my_camera)

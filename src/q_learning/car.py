@@ -62,6 +62,8 @@ class Car:
     def reset_to_start(self) -> None:
         self.x = 0
         self.y = 0
+        self.heading = 0.0
+        self.speed = 100.0
 
     def draw(self, pg, screen, camera) -> None:
         # pg.draw.circle(screen, 'BLUE', (int(self.x), int(self.y)), self.size)
