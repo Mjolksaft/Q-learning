@@ -2,11 +2,11 @@ import sys
 import pygame as pg
 import numpy as np
 
-from .ai import AiController
-from .camera import Camera
-from .car import Car
-from .playerController import PlayerController
-from .roadManager import RoadManager
+from ai import AiController
+from camera import Camera
+from car import Car
+from playerController import PlayerController
+from roadManager import RoadManager
 
 # Initialize core objects
 my_road_manager = RoadManager(0.0, 0.0)

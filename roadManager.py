@@ -2,8 +2,9 @@ import math
 import numpy as np
 import random
 
-from .road import Road
-from .util import get_heading
+from road import Road
+from util import get_heading
+
 
 
 class RoadManager:

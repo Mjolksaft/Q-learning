@@ -1,6 +1,6 @@
 import numpy as np
 
-from .util import build_catmull_rom_chain, rotate_spline
+from util import build_catmull_rom_chain, rotate_spline
 
 
 class Road:

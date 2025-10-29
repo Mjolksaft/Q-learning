@@ -2,8 +2,8 @@ import numpy as np
 import pandas as pd
 import random
 import pickle
-from .car import Car
-from .roadManager import RoadManager
+from car import Car
+from roadManager import RoadManager
 
 
 class AiController:
