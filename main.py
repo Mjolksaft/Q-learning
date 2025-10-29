@@ -21,7 +21,7 @@ def main():
     # my_ai.save_q_table()
     # my_ai.save_q_table_excel()
     
-    my_ai.load_q_table('src\\q_learning\\q-table\\q_table_best.pkl')  ## still goes off road to much punish heading ? add reward for finishing road
+    my_ai.load_q_table('q-table\\q_table_best.pkl')  ## still goes off road to much punish heading ? add reward for finishing road
     my_ai.epsilon = 0
     my_car.reset_to_start()
 
